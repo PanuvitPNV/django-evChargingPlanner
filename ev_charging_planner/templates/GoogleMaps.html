@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+ 
+{% block search_column %}
+
+  <hr/>
+
+  <form id="car-form">
+    <div class="grid">
+      <div>
+
+        <label for="car-brand" id="car-brand-label">Select your car brand:</label>
+        <select name="car-brand" id="car-brand" aria-label="Select your car brand..." required>
+          <option selected disabled value="">Select your car brand...</option>
+        </select>
+
+        <label for="car-model" id="car-model-label">Select your car model:</label>
+        <select name="car-model" id="car-model" aria-label="Select your car model..." required disabled>
+          <option selected disabled value="">Select your car model...</option>
+        </select>
+
+        <fieldset>
+          <legend>Charging port:</legend>
+          <label>
+            <input id="charging-checkbox" type="checkbox" name="Type1" disabled />
+            Type1
+          </label>
+          <label>
+            <input id="charging-checkbox" type="checkbox" name="Type2" disabled />
+            Type2
+          </label>
+          <label>
+            <input id="charging-checkbox" type="checkbox" name="CCS2" disabled />
+            CCS2
+          </label>
+          <label>
+            <input id="charging-checkbox" type="checkbox" name="CHAdeMO" disabled />
+            CHAdeMO
+          </label>
+          <label>
+            <input id="charging-checkbox" type="checkbox" name="Superchargers" disabled />
+            Superchargers
+          </label>
+
+        </fieldset>
+      </div>
+
+      <div>
+        <label for="battery-capacity">Battery capacity (kWh):</label>
+        <input type="number" id="battery-capacity" placeholder="Enter the battery capacity" required disabled />
+        
+        <label for="initial-battery">Initial battery (%):</label>
+        <fieldset role="group">      
+          <input id="initInputId" type="range" min="1" max="100" oninput="initOutputId.value = initInputId.value" required />
+          <output id="initOutputId">50</output>
+        </fieldset>
+        
+        <label for="arrival-battery">Arrival battery (%):</label>
+        <fieldset role="group">      
+          <input id="arrivalInputId" type="range" min="1" max="100" oninput="arrivalOutputId.value = arrivalInputId.value" required />
+          <output id="arrivalOutputId">50</output>
+        </fieldset>
+
+        <label>
+          <input id="manual-input" type="checkbox" role="switch" />
+            Enable manual editing
+        </label>
+
+      </div>
+    </div>
+
+    <br/>
+    <input id="save-car-button" type="button" value="Save Car Info" />
+
+  </form>
+    
+  <hr/>
+  
+  <form id="search-form">
+    <fieldset>
+      <label for="search-origin">Origin Location</label>
+      <input type="text" id="search-origin" placeholder="Enter an origin location" required>
+      <label for="search-destination">Destination Location</label>
+      <input type="text" id="search-destination" placeholder="Enter a destination location" required>
+    </fieldset>
+
+    <input id="search-direction-button" type="button" value="Search Direction" />
+    
+  </form>
+
+{% endblock search_column %}
+
+{% block google_map %}
+<div id="map"></div>
+{% endblock google_map %}
+
+
+{% block script %}
+  <script > 
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+      key: "{{ google_maps_api_key }}",
+      v: "weekly",
+      // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+      // Add other bootstrap parameters as needed, using camel case.
+    });
+
+  </script>
+{% endblock script %}
