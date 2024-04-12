@@ -90,14 +90,6 @@ def evCar_data(request):
 
         return JsonResponse(data, safe=False)
 
-def test(request):
-
-    print((settings.MONGODB_URI))
-    print((settings.GOOGLE_MAPS_API_KEY))
-    print(settings.DJANGO_SECRET_KEY)
-
-    return JsonResponse({"message": "Hello World!"})
-
 # ----------------- Helper Functions -----------------
 
 def parse_json(data):
