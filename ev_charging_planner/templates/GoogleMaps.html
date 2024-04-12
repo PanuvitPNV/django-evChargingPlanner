@@ -2,9 +2,8 @@
  
 {% block search_column %}
 
-  <hr/>
-
-  <form id="car-form">
+  <form id="car-form" method="POST">
+    {% csrf_token %}
     <div class="grid">
       <div>
 
@@ -75,7 +74,8 @@
     
   <hr/>
   
-  <form id="search-form">
+  <form id="search-form" method="POST">
+    {% csrf_token %}
     <fieldset>
       <label for="search-origin">Origin Location</label>
       <input type="text" id="search-origin" placeholder="Enter an origin location" required>

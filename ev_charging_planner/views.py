@@ -90,6 +90,7 @@ def evCar_data(request):
 
         return JsonResponse(data, safe=False)
 
+
 # ----------------- Helper Functions -----------------
 
 def parse_json(data):

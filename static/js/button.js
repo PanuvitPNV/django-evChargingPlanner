@@ -97,7 +97,7 @@ $(document).ready(function() {
       });
 
 
-    $("#search-direction-button").click(function(){
+      $("#search-direction-button").click(function(){
         var origin = $("#search-origin").val();
         var destination = $("#search-destination").val();
         var car_brand = $("#car-brand").val();
@@ -105,32 +105,52 @@ $(document).ready(function() {
         var battery_initial = $("#initInputId").val();
         var battery_arrival = $("#arrivalInputId").val();
         var battery_capacity = $("#battery-capacity").val();
-        var charging_port = "";
-
+        var charging_ports = [];
+    
         $("input#charging-checkbox").each(function(){
             if ($(this).prop("checked")){
-                // charging_port[$(this).attr("name")] = true;
-                charging_port += $(this).attr("name") + ",";
+                charging_ports.push($(this).attr("name"));
             }
         });
-
-        var result = {
+    
+        var request = {
             origin_address: origin,
             destination_address: destination,
             car_brand: car_brand,
             car_model: car_model,
             battery_initial: battery_initial,
-            battery_destination: battery_arrival,
+            battery_arrival: battery_arrival,
             battery_capacity: battery_capacity,
-            usable_battype: charging_port
+            charging_ports: charging_ports.join(",")
         };
+    
+        console.log(request);
+    
+        
 
-        $.get("/api/optimize_route", result, function(data) {
-            console.log(data);
+        $.ajax({
+            url: 'https://api-ev-charging-planner-be9tw.ondigitalocean.app/optimize',
+            type: 'POST',
+            crossDomain: true,
+            data: JSON.stringify(request),
+            contentType: "application/json;",
+            traditional: true,
+            beforeSend: function(){
+                
+            },
+            complete: function(){
+                $("#loading-screen").remove();
+            },
+            success: function(data){
+                console.log(data);
+            },
+            error: function(error){
+                console.log(error);
+            }
+
         });
     });
-
-
+    
 
 
 

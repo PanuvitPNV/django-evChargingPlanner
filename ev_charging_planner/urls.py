@@ -7,6 +7,6 @@ urlpatterns = [
     path('', GoogleMaps, name='GoogleMaps'),
     
     # API
-    path('api/all_station/', allStation),
+    path('api/all_station', allStation),
     path('api/ev_car_data', evCar_data),
 ]
