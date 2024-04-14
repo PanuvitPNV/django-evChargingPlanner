@@ -26,8 +26,8 @@
   <!-- JQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-  <script type="module" src="{% static 'js/initMap.js' %}"></script>
-  <script src="{% static 'js/button.js' %}"></script>
+  <script type="module" src="{% static 'js/func_map.js' %}"></script>
+  <script src="{% static 'js/func_utils.js' %}"></script>
 
 </head>
 
@@ -35,16 +35,14 @@
   <div class="container">
     <nav>
       <ul>
+        <li><h3>🐋 EV Charging Planner</h3></li>
+      </ul>
+      <ul>
         <li><a href="https://github.com/PanuvitPNV/django-evChargingPlanner" class="secondary"><i class="fa-brands fa-github"></i></a></li>
-      </ul>
-      <ul>
-        <li><strong>EV Charging Planner</strong></li>
-      </ul>
-      <ul>
         <li>
           <details class="dropdown">
             <summary>
-              <i class="fa-solid fa-gear"></i>
+              Account
             </summary>
             <ul dir="rtl">
               <li><a href="#">Profile</a></li>
@@ -56,9 +54,10 @@
         </li>
       </ul>
     </nav>
+    <hr/>
   </div>
 
-  <hr/>
+  
 
 
 

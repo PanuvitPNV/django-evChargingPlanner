@@ -75,6 +75,9 @@ $(document).ready(function() {
           // Reset values before hiding
           $("#car-brand").val($("#car-brand option:first").val());
           $("#car-model").val($("#car-model option:first").val());
+          $("#car-brand").prop("disabled", true);
+          $("#car-model").prop("disabled", true);
+
           $("#car-brand-label, #car-brand, #car-model-label, #car-model").hide();
 
           $("input#charging-checkbox").prop("checked", false);
@@ -86,6 +89,8 @@ $(document).ready(function() {
           // Reset values after showing
           $("#car-brand").val($("#car-brand option:first").val());
           $("#car-model").val($("#car-model option:first").val());
+          $("#car-brand").prop("disabled", false);
+
           $("#car-brand-label, #car-brand, #car-model-label, #car-model").show();
 
           $("input#charging-checkbox").prop("checked", false);
@@ -95,63 +100,6 @@ $(document).ready(function() {
           $("#battery-capacity").prop("disabled", true);
         }
       });
-
-
-      $("#search-direction-button").click(function(){
-        var origin = $("#search-origin").val();
-        var destination = $("#search-destination").val();
-        var car_brand = $("#car-brand").val();
-        var car_model = $("#car-model").val();
-        var battery_initial = $("#initInputId").val();
-        var battery_arrival = $("#arrivalInputId").val();
-        var battery_capacity = $("#battery-capacity").val();
-        var charging_ports = [];
-    
-        $("input#charging-checkbox").each(function(){
-            if ($(this).prop("checked")){
-                charging_ports.push($(this).attr("name"));
-            }
-        });
-    
-        var request = {
-            origin_address: origin,
-            destination_address: destination,
-            car_brand: car_brand,
-            car_model: car_model,
-            battery_initial: battery_initial,
-            battery_arrival: battery_arrival,
-            battery_capacity: battery_capacity,
-            charging_ports: charging_ports.join(",")
-        };
-    
-        console.log(request);
-    
-        
-
-        $.ajax({
-            url: 'https://api-ev-charging-planner-be9tw.ondigitalocean.app/optimize',
-            type: 'POST',
-            crossDomain: true,
-            data: JSON.stringify(request),
-            contentType: "application/json;",
-            traditional: true,
-            beforeSend: function(){
-                
-            },
-            complete: function(){
-                $("#loading-screen").remove();
-            },
-            success: function(data){
-                console.log(data);
-            },
-            error: function(error){
-                console.log(error);
-            }
-
-        });
-    });
-    
-
 
 
 
