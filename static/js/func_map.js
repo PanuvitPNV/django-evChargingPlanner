@@ -30,7 +30,87 @@ async function initMap() {
     map = new Map(document.getElementById("map"), {
       center: userLocation,
       zoom: 16,
-      mapId: 'aa02cb992666fba3',
+    //   mapId: 'aa02cb992666fba3',
+      styles: [
+        { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
+        { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
+        { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
+        {
+          featureType: "administrative.locality",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#d59563" }],
+        },
+        {
+          featureType: "poi",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#d59563" }],
+        },
+        {
+          featureType: "poi.park",
+          elementType: "geometry",
+          stylers: [{ color: "#263c3f" }],
+        },
+        {
+          featureType: "poi.park",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#6b9a76" }],
+        },
+        {
+          featureType: "road",
+          elementType: "geometry",
+          stylers: [{ color: "#38414e" }],
+        },
+        {
+          featureType: "road",
+          elementType: "geometry.stroke",
+          stylers: [{ color: "#212a37" }],
+        },
+        {
+          featureType: "road",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#9ca5b3" }],
+        },
+        {
+          featureType: "road.highway",
+          elementType: "geometry",
+          stylers: [{ color: "#746855" }],
+        },
+        {
+          featureType: "road.highway",
+          elementType: "geometry.stroke",
+          stylers: [{ color: "#1f2835" }],
+        },
+        {
+          featureType: "road.highway",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#f3d19c" }],
+        },
+        {
+          featureType: "transit",
+          elementType: "geometry",
+          stylers: [{ color: "#2f3948" }],
+        },
+        {
+          featureType: "transit.station",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#d59563" }],
+        },
+        {
+          featureType: "water",
+          elementType: "geometry",
+          stylers: [{ color: "#17263c" }],
+        },
+        {
+          featureType: "water",
+          elementType: "labels.text.fill",
+          stylers: [{ color: "#515c6d" }],
+        },
+        {
+          featureType: "water",
+          elementType: "labels.text.stroke",
+          stylers: [{ color: "#17263c" }],
+        },
+      ],
       disableDefaultUI: true,
     });
 
@@ -45,7 +125,7 @@ async function initMap() {
   }
 
     directionsRenderer.setMap(map);
-
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(infoButton());
 }
 
 initMap();
@@ -95,7 +175,7 @@ const destinationAutocomplete = new Autocomplete(destinationInput, options);
 
 
 $(document).ready(function() {
-  $("#search-direction-button").click(function(){
+  $("#user-input").on('submit',function(){
     var origin = $("#search-origin").val();
     var destination = $("#search-destination").val();
     var car_brand = $("#car-brand").val();
@@ -141,6 +221,7 @@ $(document).ready(function() {
             console.log(data);
             if (data.status === "success"){
                 calculateAndDisplayRoute(data, origin, destination);
+                $("html, body").animate({ scrollTop: document.body.scrollHeight }, "slow");
             }else{
                 alert("Error: failed to optimize route.");
             }
@@ -183,4 +264,14 @@ function calculateAndDisplayRoute(response_data, origin, destination){
         }
     });
 
+}
+
+function infoButton(){
+    var btn = $(`<div id="info-button-container" style="text-align: right; margin: 10px">
+                    <button class="contrast"><i class="fa-solid fa-circle-info"></i></button>
+                </div>`);
+    btn.bind('click', function(){
+        alert('button clicked!');
+    });
+    return btn[0];
 }

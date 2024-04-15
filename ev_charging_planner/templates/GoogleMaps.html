@@ -2,7 +2,7 @@
  
 {% block search_column %}
 
-  <form method="POST">
+  <form id="user-input" method="POST" onsubmit="return false">
     {% csrf_token %}
     <div class="grid">
       <div>
@@ -76,14 +76,15 @@
       <input type="text" id="search-destination" placeholder="Enter a destination location" required>
     </fieldset>
 
-    <input id="search-direction-button" type="button" value="Search Direction" />
+    <!-- <button style="width: 100%; margin-bottom: 20px" >Search Direction</button> -->
+    <input type="submit" />
     
   </form>
 
 {% endblock search_column %}
 
 {% block google_map %}
-<div id="map"></div>
+  <div id="map"></div>
 {% endblock google_map %}
 
 
