@@ -275,24 +275,30 @@ $(document).ready(function() {
   }
 
   function populateCookie(){
+
     var cookies = getCookie();
 
     if (cookies["manual_input"] === "true"){
-        $("#manual-input").click();
+      $("#manual-input").click();
     }
 
-    if (cookies["car_brand"] !== "null"){
-        $("#car-brand").val(cookies["car_brand"]).change();
+    if (cookies["car_brand"] !== "null" && cookies["car_brand"] !== "" && cookies["car_brand"] !== undefined){
+      $("#car-brand").val(cookies["car_brand"]).change();
     }
 
-    if (cookies["car_model"] !== "null"){
-        $("#car-model").val(cookies["car_model"]).change();
+    if (cookies["car_model"] !== "null" && cookies["car_model"] !== "" && cookies["car_model"] !== undefined){
+      $("#car-model").val(cookies["car_model"]).change();
     }
 
-    $("#battery-capacity").val(cookies["battery_capacity"]);
-    var charging_ports = cookies["charging_ports"].split(",");
-    for (var i = 0; i < charging_ports.length; i++){
-        $("input[name=" + charging_ports[i] + "]").prop("checked", true);
+    if (cookies["battery_capacity"] !== "null" && cookies["battery_capacity"] !== "" && cookies["battery_capacity"] !== undefined){
+      $("#battery-capacity").val(cookies["battery_capacity"]);
+    }
+
+    if (cookies["charging_ports"] !== "null" && cookies["charging_ports"] !== "" && cookies["charging_ports"] !== undefined){
+      var charging_ports = cookies["charging_ports"].split(",");
+      for (var i = 0; i < charging_ports.length; i++){
+          $("input[name=" + charging_ports[i] + "]").prop("checked", true);
+      }
     }
   }
   
