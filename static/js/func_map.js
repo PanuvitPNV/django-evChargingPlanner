@@ -176,6 +176,8 @@ const destinationAutocomplete = new Autocomplete(destinationInput, options);
 
 $(document).ready(function() {
   $("#user-input").on('submit',function(){
+    event.preventDefault(); // Prevent the form from submitting normally
+
     var origin = $("#search-origin").val();
     var destination = $("#search-destination").val();
     var car_brand = $("#car-brand").val();
@@ -184,6 +186,8 @@ $(document).ready(function() {
     var battery_arrival = $("#arrivalInputId").val();
     var battery_capacity = $("#battery-capacity").val();
     var charging_ports = [];
+
+    var manual_input = $("#manual-input").is(":checked")
 
     $("input#charging-checkbox").each(function(){
         if ($(this).prop("checked")){
@@ -203,6 +207,18 @@ $(document).ready(function() {
     };
 
     console.log(request);
+
+    var cookies = {
+      manual_input: manual_input,
+      car_brand: car_brand,
+      car_model: car_model,
+      battery_capacity: battery_capacity,
+      charging_ports: charging_ports.join(",")
+    }
+
+    setCookie(cookies, 180);
+
+    
 
     $.ajax({
         url: 'https://api-ev-charging-planner-be9tw.ondigitalocean.app/optimize',
@@ -232,6 +248,55 @@ $(document).ready(function() {
 
     });
   });
+
+  function setCookie(cookies, exdays){
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    for (var key in cookies){
+        document.cookie = key + "=" + cookies[key] + ";" + expires + ";path=/";
+    }
+  }
+
+  function getCookie(){
+    var cookies = {};
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++){
+        var c = ca[i];
+        while (c.charAt(0) == ' '){
+            c = c.substring(1);
+        }
+        var key = c.split('=')[0];
+        var value = c.split('=')[1];
+        cookies[key] = value;
+    }
+    return cookies;
+  }
+
+  function populateCookie(){
+    var cookies = getCookie();
+
+    if (cookies["manual_input"] === "true"){
+        $("#manual-input").click();
+    }
+
+    if (cookies["car_brand"] !== "null"){
+        $("#car-brand").val(cookies["car_brand"]).change();
+    }
+
+    if (cookies["car_model"] !== "null"){
+        $("#car-model").val(cookies["car_model"]).change();
+    }
+
+    $("#battery-capacity").val(cookies["battery_capacity"]);
+    var charging_ports = cookies["charging_ports"].split(",");
+    for (var i = 0; i < charging_ports.length; i++){
+        $("input[name=" + charging_ports[i] + "]").prop("checked", true);
+    }
+  }
+  
+  populateCookie();
 
 });
 
