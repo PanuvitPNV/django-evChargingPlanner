@@ -234,17 +234,17 @@ $(document).ready(function() {
         },
         success: function(data){
             if (data.status === "success"){
-              $("dialog#info-modal article details#summary").append(`<li><b>Estimated time:</b> ${convertTime(data["total time"])}</li>`);
+              $("dialog#info-modal article details#summary").append(`<li><b>Estimated time:</b> ${convert_time(data["total time"])}</li>`);
               
               for (var i = 0; i < data["solution detail"].length; i++){
                 const img_url = `static/img/station_banner/${(data["solution detail"][i].Provider).toLowerCase()}.png`;
                 const station_address = data["solution detail"][i].Address;
                 const station_name = data["solution detail"][i].Name;
-                const arrival_battery = convertBattery(data["solution data"]["arrival battery"][i],battery_capacity);
-                const target_battery = convertBattery(data["solution data"]["target battery"][i],battery_capacity);
-                const charging_time = convertTime(data["solution data"]["charging time"][i]);
-                const driving_time = convertTime(data["solution data"]["driving time"][i]);
-                const total_time = convertTime(data["solution data"]["total time"][i]);
+                const arrival_battery = convert_battery(data["solution data"]["arrival battery"][i],battery_capacity);
+                const target_battery = convert_battery(data["solution data"]["target battery"][i],battery_capacity);
+                const charging_time = convert_time(data["solution data"]["charging time"][i]);
+                const driving_time = convert_time(data["solution data"]["driving time"][i]);
+                const total_time = convert_time(data["solution data"]["total time"][i]);
 
                 $("dialog#info-modal article details#charging-stops ol").append(`
                 <li>
@@ -272,9 +272,10 @@ $(document).ready(function() {
             }
         },
         error: function(error){
-          console.log(error);
+          const errorMessage = error.responseJSON?.error ?? "Server timeout";
+
           $("dialog#error-modal article p#error-message").text("An unexpected issue occurred. Please try again later or contact support for further assistance.");
-          $("dialog#error-modal article small").html("<strong>ERROR MESSAGE:</strong> " + error.responseJSON.error);
+          $("dialog#error-modal article small").html("<strong>ERROR MESSAGE:</strong> " + errorMessage);
           $("dialog#error-modal").prop("open", true);
         }
 
@@ -375,13 +376,13 @@ function infoButton() {
   return btn[0];
 }
 
-function convertTime(time){
+function convert_time(time){
   var hours = Math.floor(time);
   var minutes = Math.floor((time - hours) * 60);
   var seconds = Math.round((time - hours - minutes / 60) * 3600);
   return `${hours} hours ${minutes} minutes ${seconds} seconds`;
 }
 
-function convertBattery(current, capacity){
+function convert_battery(current, capacity){
   return Math.round((current/capacity)*100);
 }
