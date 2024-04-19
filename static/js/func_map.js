@@ -1,14 +1,16 @@
-// Global variable to store the map.
-let map;
-
 // Async function to load the Google Maps JavaScript API
 const { Map } = await google.maps.importLibrary("maps");
 const { DirectionsService, DirectionsRenderer } = await google.maps.importLibrary("routes");
 const { Autocomplete } = await google.maps.importLibrary("places");
-const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+const { AdvancedMarkerElement, Marker } = await google.maps.importLibrary("marker");
 
 const directionsService = new google.maps.DirectionsService();
-const directionsRenderer = new google.maps.DirectionsRenderer();
+const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: true});
+
+// Global variable to store the map.
+let map;
+let markers = [];
+
 
 // Async function to initialize the map
 async function initMap() {
@@ -226,6 +228,11 @@ $(document).ready(function() {
         contentType: "application/json;",
         traditional: true,
         beforeSend: function(){
+          for (var i = 0; i < markers.length; i++){
+            markers[i].setMap(null);
+          }
+          markers = [];
+
           $("dialog#info-modal article details#summary li").remove();
           $("dialog#info-modal article details#charging-stops ol li").remove();
         },
@@ -237,7 +244,7 @@ $(document).ready(function() {
               $("dialog#info-modal article details#summary").append(`<li><b>Estimated time:</b> ${convert_time(data["total time"])}</li>`);
               
               for (var i = 0; i < data["solution detail"].length; i++){
-                const img_url = `static/img/station_banner/${(data["solution detail"][i].Provider).toLowerCase()}.png`;
+                const img_url = `static/img/station_logo/${(data["solution detail"][i].Provider).toLowerCase()}.png`;
                 const station_address = data["solution detail"][i].Address;
                 const station_name = data["solution detail"][i].Name;
                 const arrival_battery = convert_battery(data["solution data"]["arrival battery"][i],battery_capacity);
@@ -339,7 +346,6 @@ $(document).ready(function() {
 
 });
 
-
 function calculateAndDisplayRoute(response_data, origin, destination){
   const waypts = [];
   var route = response_data["solution detail"];
@@ -361,9 +367,20 @@ function calculateAndDisplayRoute(response_data, origin, destination){
 
   directionsService.route(request, function(result, status){
       if (status === google.maps.DirectionsStatus.OK){
-          directionsRenderer.setDirections(result);
+        directionsRenderer.setDirections(result);
+        
+        var origin_leg = result.routes[0].legs[0];
+        var destination_leg = result.routes[0].legs[result.routes[0].legs.length - 1];
+
+        markers.push(make_marker(origin_leg.start_location, "origin"));
+        markers.push(make_marker(destination_leg.end_location, "destination"));
+
+        for (var i = 0; i < route.length; i++){
+          markers.push(make_marker({ lat: route[i].Latitude, lng: route[i].Longitude }, route[i].Provider.toLowerCase()));
+        }
+
       }else{
-          alert("Error: failed to optimize route.");
+        alert("Error: failed to optimize route.");
       }
   });
 
@@ -385,4 +402,16 @@ function convert_time(time){
 
 function convert_battery(current, capacity){
   return Math.round((current/capacity)*100);
+}
+
+function make_marker(position, title){
+  var marker = new google.maps.Marker({
+      position: position,
+      map: map,
+      icon: {
+        url: `static/img/station_marker/${title}.png`,
+        scaledSize: new google.maps.Size(36, 45),
+      },
+  });
+  return marker;
 }
