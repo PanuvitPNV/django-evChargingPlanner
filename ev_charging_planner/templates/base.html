@@ -8,11 +8,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="light dark" />
 	<title>Django GoogleMaps</title>
+  <meta name="description" content="Example" />
 
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
   <script src="https://kit.fontawesome.com/79b0cd4bc5.js" crossorigin="anonymous" ></script>
-
 
   <!-- Pico CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
@@ -28,7 +28,8 @@
 
   <script type="module" src="{% static 'js/func_map.js' %}"></script>
   <script src="{% static 'js/func_utils.js' %}"></script>
-
+  <script src="{% static 'js/func_validate.js' %}"></script>
+  
 </head>
 
 <body >
@@ -39,6 +40,16 @@
       </ul>
       <ul>
         <li><a href="https://github.com/PanuvitPNV/django-evChargingPlanner" target="_blank" class="secondary"><i class="fa-brands fa-github"></i></a></li>
+        <li>
+          <details class="dropdown">
+            <summary role="button" class="secondary">Theme</summary>
+            <ul>
+              <li><a href="#" data-theme-switcher="auto">Auto</a></li>
+              <li><a href="#" data-theme-switcher="light">Light</a></li>
+              <li><a href="#" data-theme-switcher="dark">Dark</a></li>
+            </ul>
+          </details>
+        </li>
       </ul>
     </nav>
     <hr/>
@@ -53,10 +64,50 @@
     {% block google_map %}
         <!-- Placeholder for google_map block -->
     {% endblock google_map %}
+    
   </div>
 
-  {% block script %}{% endblock script %}
+  <dialog id="info-modal">
+    <article>
+      <header>
+        <button
+          aria-label="Close"
+          rel="prev"
+          data-target="info-modal"
+          onclick="toggleModal(event)"
+        ></button>
+        <h3>Charging Station Information</h3>
+      </header>
 
+      <details id="summary" open >
+        <summary>Summary:</summary>
+      </details>
+      
+      <hr />
+      
+      <details id="charging-stops" open>
+        <summary>Charging Stops:</summary>
+        <ol>
+        </ol>
+      </details>
+
+    </article>
+  </dialog>
+
+  <dialog id="route-calculation-modal">
+    <article>
+      <header>
+        <h3 aria-busy="true">Calculating Route</h3>
+      </header>
+      <p>Please wait while we calculate the optimal route for your journey.</p>
+      <p>This process may take up to 2 minutes.</p>
+    </article>
+  </dialog>
+
+  {% block script %}{% endblock script %}
+  
+  <script src="{% static 'js/minimal-theme-switcher.js' %}"></script>
+  <script src="{% static 'js/info_modal.js' %}"></script>
 </body>
 
 </html>

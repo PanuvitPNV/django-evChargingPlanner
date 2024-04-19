@@ -126,6 +126,7 @@ async function initMap() {
 
     directionsRenderer.setMap(map);
     map.controls[google.maps.ControlPosition.TOP_RIGHT].push(infoButton());
+    
 }
 
 initMap();
@@ -138,31 +139,31 @@ originInput.addEventListener("focus", () => {
 });
 
 destinationInput.addEventListener("focus", () => {
-    destinationInput.value = "";
+  destinationInput.value = "";
 });
 
 originInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-        e.preventDefault();
-    }
+  if (e.key === "Enter") {
+      e.preventDefault();
+  }
 });
 
 destinationInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-        e.preventDefault();
-    }
+  if (e.key === "Enter") {
+      e.preventDefault();
+  }
 });
 
 originInput.addEventListener("input", () => {
-    if (originInput.value) {
-        originInput.classList.remove("is-invalid");
-    }
+  if (originInput.value) {
+      originInput.classList.remove("is-invalid");
+  }
 });
 
 destinationInput.addEventListener("input", () => {
-    if (destinationInput.value) {
-        destinationInput.classList.remove("is-invalid");
-    }
+  if (destinationInput.value) {
+      destinationInput.classList.remove("is-invalid");
+  }
 });
 
 const options = {
@@ -173,8 +174,8 @@ const options = {
 const originAutocomplete = new Autocomplete(originInput, options);
 const destinationAutocomplete = new Autocomplete(destinationInput, options);
 
-
 $(document).ready(function() {
+
   $("#user-input").on('submit',function(){
     event.preventDefault(); // Prevent the form from submitting normally
 
@@ -217,8 +218,7 @@ $(document).ready(function() {
     }
 
     setCookie(cookies, 180);
-
-    
+    $("dialog#route-calculation-modal").prop("open", true);
 
     $.ajax({
         url: 'https://api-ev-charging-planner-be9tw.ondigitalocean.app/optimize',
@@ -228,22 +228,40 @@ $(document).ready(function() {
         contentType: "application/json;",
         traditional: true,
         beforeSend: function(){
-            
+          $("dialog#info-modal article details#summary li").remove();
+          $("dialog#info-modal article details#charging-stops ol li").remove();
         },
         complete: function(){
-            $("#loading-screen").remove();
+          $("dialog#route-calculation-modal").prop("open", false);
         },
         success: function(data){
             console.log(data);
             if (data.status === "success"){
-                calculateAndDisplayRoute(data, origin, destination);
-                $("html, body").animate({ scrollTop: document.body.scrollHeight }, "slow");
+              $("dialog#info-modal article details#summary").append(`<li>Estimated time: ${convertTime(data["total time"])}</li>`);
+              
+              for (var i = 0; i < data["solution detail"].length; i++){
+                $("dialog#info-modal article details#charging-stops ol").append(`
+                <li><i class="fa-solid fa-charging-station"></i> Details: 
+                  <ul>
+                    <li>Station name: ${data["solution detail"][i].Name}</li>
+                    <li>Address: ${data["solution detail"][i].Address}</li>
+                    <li>Arrival battery: ${data["solution data"]["arrival battery"][i]*battery_capacity} kWh</li>
+                    <li>Target battery: ${data["solution data"]["target battery"][i]*battery_capacity} kWh</li>
+                    <li>Charging time: ${convertTime(data["solution data"]["charging time"][i])}</li>
+                    <li>Driving time: ${convertTime(data["solution data"]["driving time"][i])}</li>
+                    <li>Total time: ${convertTime(data["solution data"]["total time"][i])}</li>
+                  </ul>
+                </li>`);
+              }
+
+              calculateAndDisplayRoute(data, origin, destination);
+              $("html, body").animate({ scrollTop: document.body.scrollHeight }, "slow");
             }else{
-                alert("Error: failed to optimize route.");
+              alert("Error: failed to optimize route, Please try again.");
             }
         },
         error: function(error){
-            console.log(error);
+          console.log(error);
         }
 
     });
@@ -337,12 +355,17 @@ function calculateAndDisplayRoute(response_data, origin, destination){
 
 }
 
-function infoButton(){
-    var btn = $(`<div id="info-button-container" style="text-align: right; margin: 10px">
-                    <button class="contrast"><i class="fa-solid fa-circle-info"></i></button>
-                </div>`);
-    btn.bind('click', function(){
-        alert('button clicked!');
-    });
-    return btn[0];
+function infoButton() {
+  var btn = $(`<div id="info-button-container" style="text-align: right; margin: 10px">
+                  <button id="info-button" class="contrast" data-target="info-modal" onclick="toggleModal(event)"><i class="fa-solid fa-circle-info"></i></button>
+              </div>`);
+  return btn[0];
+}
+
+
+function convertTime(time){
+  var hours = Math.floor(time);
+  var minutes = Math.floor((time - hours) * 60);
+  var seconds = Math.round((time - hours - minutes / 60) * 3600);
+  return `${hours} hours ${minutes} minutes ${seconds} seconds`;
 }

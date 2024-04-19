@@ -71,35 +71,29 @@ $(document).ready(function() {
 
 
     $("#manual-input").change(function() {
-        if ($(this).prop("checked")) {
-          // Reset values before hiding
-          $("#car-brand").val($("#car-brand option:first").val());
-          $("#car-model").val($("#car-model option:first").val());
-          $("#car-brand").prop("disabled", true);
-          $("#car-model").prop("disabled", true);
-
-          $("#car-brand-label, #car-brand, #car-model-label, #car-model").hide();
-
-          $("input#charging-checkbox").prop("checked", false);
-          $("input#charging-checkbox").prop("disabled", false);
-
-          $("#battery-capacity").val("");
-          $("#battery-capacity").prop("disabled", false);
+        const isChecked = $(this).prop("checked");
+        const carBrandSelect = $("#car-brand");
+        const carModelSelect = $("#car-model");
+        const chargingCheckboxes = $("input#charging-checkbox");
+        const batteryCapacityInput = $("#battery-capacity");
+    
+        if (isChecked) {
+            // Reset values and disable fields
+            carBrandSelect.val(carBrandSelect.find("option:first").val()).prop("disabled", true);
+            carModelSelect.val(carModelSelect.find("option:first").val()).prop("disabled", true);
+            $("#car-brand-label, #car-brand, #car-model-label, #car-model").hide();
+    
+            chargingCheckboxes.prop("checked", false).prop("disabled", false);
+            batteryCapacityInput.val("").prop("disabled", false);
         } else {
-          // Reset values after showing
-          $("#car-brand").val($("#car-brand option:first").val());
-          $("#car-model").val($("#car-model option:first").val());
-          $("#car-brand").prop("disabled", false);
-
-          $("#car-brand-label, #car-brand, #car-model-label, #car-model").show();
-
-          $("input#charging-checkbox").prop("checked", false);
-          $("input#charging-checkbox").prop("disabled", true);
-
-          $("#battery-capacity").val("");
-          $("#battery-capacity").prop("disabled", true);
+            // Reset values and enable fields
+            carBrandSelect.val(carBrandSelect.find("option:first").val()).prop("disabled", false);
+            carModelSelect.val(carModelSelect.find("option:first").val());
+            $("#car-brand-label, #car-brand, #car-model-label, #car-model").show();
+    
+            chargingCheckboxes.prop("checked", false).prop("disabled", true);
+            batteryCapacityInput.val("").prop("disabled", true);
         }
-      });
-
+    });
 
 });
