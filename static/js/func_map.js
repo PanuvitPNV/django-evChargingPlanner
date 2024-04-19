@@ -279,7 +279,7 @@ $(document).ready(function() {
             }
         },
         error: function(error){
-          const errorMessage = error.responseJSON?.error ?? "Server timeout";
+          const errorMessage = error.responseJSON?.error ?? "Server timeout.";
 
           $("dialog#error-modal article p#error-message").text("An unexpected issue occurred. Please try again later or contact support for further assistance.");
           $("dialog#error-modal article small").html("<strong>ERROR MESSAGE:</strong> " + errorMessage);
@@ -315,7 +315,6 @@ $(document).ready(function() {
   }
 
   function populateCookie(){
-
     var cookies = getCookie();
 
     if (cookies["manual_input"] === "true"){
@@ -376,7 +375,7 @@ function calculateAndDisplayRoute(response_data, origin, destination){
         markers.push(make_marker(destination_leg.end_location, "destination"));
 
         for (var i = 0; i < route.length; i++){
-          markers.push(make_marker({ lat: route[i].Latitude, lng: route[i].Longitude }, route[i].Provider.toLowerCase()));
+          markers.push(make_marker({ lat: route[i].Latitude, lng: route[i].Longitude }, route[i].Provider.toLowerCase(), route[i]));
         }
 
       }else{
@@ -404,7 +403,7 @@ function convert_battery(current, capacity){
   return Math.round((current/capacity)*100);
 }
 
-function make_marker(position, title){
+function make_marker(position, title, data = null){
   var marker = new google.maps.Marker({
       position: position,
       map: map,
@@ -413,5 +412,68 @@ function make_marker(position, title){
         scaledSize: new google.maps.Size(36, 45),
       },
   });
+  
+  var contentString;
+
+  if (title === "origin" || title === "destination"){
+    contentString = `<div class="container"><h6 style="color: black;">${title}</h6></div>`;
+  } else {
+    contentString = `
+    <div class="container" style="max-height: 10rem; overflow-y: auto; margin: 10px;">
+      <header>
+        <img src="static/img/station_logo/${title}.png" align="left" alt="Charging station image" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+        <h6 style="color: black;">${data.Name}</h6>
+      </header>
+      <div>
+        <p style="color: black;"><strong>Provider:</strong> ${data.Provider}</p>
+        <p style="color: black;"><strong>Address:</strong> ${data.Address}</p>
+        <p style="color: black;"><strong>Power:</strong> ${data.Power}</p>
+        <p style="color: black;"><strong>Type1:</strong> ${data.Type1}</p>
+        <p style="color: black;"><strong>Type1Count:</strong> ${data.Type1Count}</p>
+        <p style="color: black;"><strong>Type2:</strong> ${data.Type2}</p>
+        <p style="color: black;"><strong>Type2Count:</strong> ${data.Type2Count}</p>
+        <p style="color: black;"><strong>CCS2:</strong> ${data.CCS2}</p>
+        <p style="color: black;"><strong>CCS2Count:</strong> ${data.CCS2Count}</p>
+        <p style="color: black;"><strong>CHAdeMO:</strong> ${data.CHAdeMO}</p>
+        <p style="color: black;"><strong>CHAdeMOCount:</strong> ${data.CHAdeMOCount}</p>
+        <p style="color: black;"><strong>Superchargers:</strong> ${data.Superchargers}</p>
+        <p style="color: black;"><strong>SuperchargersCount:</strong> ${data.SuperchargersCount}</p>
+      </div>
+    </div>`;
+
+    // contentString = `
+    // <article style="max-height: 10rem; overflow-y: auto; margin: 10px;">
+    //   <header>
+    //     <img src="static/img/station_logo/${title}.png" align="left" alt="Charging station image" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
+    //     <h6 style="color: black;">${data.Name}</h6>
+    //   </header>
+    //   <div>
+    //     <p style="color: black;"><strong>Provider:</strong> ${data.Provider}</p>
+    //     <p style="color: black;"><strong>Address:</strong> ${data.Address}</p>
+    //     <p style="color: black;"><strong>Power:</strong> ${data.Power}</p>
+    //     <p style="color: black;"><strong>Type1:</strong> ${data.Type1}</p>
+    //     <p style="color: black;"><strong>Type1Count:</strong> ${data.Type1Count}</p>
+    //     <p style="color: black;"><strong>Type2:</strong> ${data.Type2}</p>
+    //     <p style="color: black;"><strong>Type2Count:</strong> ${data.Type2Count}</p>
+    //     <p style="color: black;"><strong>CCS2:</strong> ${data.CCS2}</p>
+    //     <p style="color: black;"><strong>CCS2Count:</strong> ${data.CCS2Count}</p>
+    //     <p style="color: black;"><strong>CHAdeMO:</strong> ${data.CHAdeMO}</p>
+    //     <p style="color: black;"><strong>CHAdeMOCount:</strong> ${data.CHAdeMOCount}</p>
+    //     <p style="color: black;"><strong>Superchargers:</strong> ${data.Superchargers}</p>
+    //     <p style="color: black;"><strong>SuperchargersCount:</strong> ${data.SuperchargersCount}</p>
+    //   </div>
+    // </article>`;
+  }
+    
+  var infowindow = new google.maps.InfoWindow({
+      content: contentString,
+  });
+
+  marker.addListener("click", () => {
+      infowindow.open(map, marker);
+  });
+
   return marker;
 }
+
+

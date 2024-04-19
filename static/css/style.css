@@ -19,10 +19,13 @@ html, body {
   padding:0!important;
 }
 
-[role="button"]:is([aria-label]),button:is([aria-label]){
+[role="button"]:is([aria-label], [aria-describedby], [tabindex]),button:is([aria-label]){
   background-color: rgba(0, 0, 0, 0) !important;
   border-color: rgba(0, 0, 0, 0) !important;
   padding: 0px 0px;
+  --pico-border-color: rgba(0, 0, 0, 0) !important;
+  --pico-background-color: rgba(0, 0, 0, 0) !important;
+  --pico-primary-focus: rgba(0, 0, 0, 0) !important;
 }
 
 button[title=Close]{
