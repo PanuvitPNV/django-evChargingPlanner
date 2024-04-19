@@ -98,7 +98,7 @@
         <div>
           <label for="battery-capacity">Battery capacity (kWh):</label>
           <input id="battery-capacity" placeholder="Enter the battery capacity" pattern="\d+(\.\d+)?" required disabled />
-          <small style="color: #FECC63;" >* E.g., 100, 50.5, 123.456 or 220.0</small>
+          <small style="color: #FFA23A;" >* E.g., 100, 50.5, 123.456 or 220.0</small>
           
           <label for="initial-battery">Initial battery (%):</label>
           <fieldset role="group">      
@@ -124,11 +124,11 @@
       <fieldset>
         <label for="search-origin">Origin Location</label>
         <input type="text" id="search-origin" placeholder="Enter an origin location" required>
-        <small style="color: #FECC63;">* Please select a location from the dropdown list</small>
+        <small style="color: #FFA23A;">* Please select a location from the dropdown list</small>
 
         <label for="search-destination">Destination Location</label>
         <input type="text" id="search-destination" placeholder="Enter a destination location" required>
-        <small style="color: #FECC63;">* Please select a location from the dropdown list</small>
+        <small style="color: #FFA23A;">* Please select a location from the dropdown list</small>
       </fieldset>
   
       <input id="search-direction" type="submit" value="Search Direction"/>
@@ -140,36 +140,45 @@
   <dialog id="info-modal">
     <article>
       <header>
-        <button
-          aria-label="Close"
-          rel="prev"
-          data-target="info-modal"
-          onclick="toggleModal(event)"
-        ></button>
-        <h3>Charging Station Information</h3>
+        <button aria-label="Close" rel="prev" data-target="info-modal" onclick="toggleModal(event)"></button>
+        <h3>💡 Direction Information</h3>
       </header>
-
-      <details id="summary" open >
-        <summary>Summary:</summary>
-      </details>
-      
-      <hr />
-      
       <details id="charging-stops" open>
-        <summary>Charging Stops:</summary>
-        <ol>
-        </ol>
+        <summary style="font-weight: 600">Charging Stops:</summary>
+        <ol></ol>
       </details>
+      <hr/>
+      <details id="summary" open >
+        <summary style="font-weight: 600">Summary:</summary>
+      </details>
+      <footer>
+        <button role="button" class="secondary" data-target="info-modal" onclick="toggleModal(event)">Close</button>
+      </footer>
     </article>
   </dialog>
 
+  <dialog id="error-modal">
+    <article>
+        <header>
+            <button aria-label="Close" rel="prev" data-target="error-modal" onclick="toggleModal(event)"></button>
+            <h3>⚠️ Error</h3>
+        </header>
+        <p id="error-message"></p>
+        <small style="color: #EE402E;"></small>
+        <footer>
+          <button role="button" class="secondary" data-target="error-modal" onclick="toggleModal(event)">Close</button>
+        </footer>
+    </article>
+  </dialog>
+  
   <dialog id="route-calculation-modal">
     <article>
-      <header>
-        <h3 aria-busy="true">Calculating Route</h3>
-      </header>
-      <p>Please wait while we calculate the optimal route for your journey.</p>
-      <p>This process may take up to 2 minutes.</p>
+        <header>
+            <h3 aria-busy="true">Calculating Route</h3>
+        </header>
+        <p>We are currently optimizing your route for the journey. 🚀</p>
+        <p>This process may require a few moments to complete. ⏳</p>
+        <p>Your patience is appreciated. 🙏</p>
     </article>
   </dialog>
 

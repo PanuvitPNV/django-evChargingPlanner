@@ -207,8 +207,6 @@ $(document).ready(function() {
         charging_ports: charging_ports.join(",")
     };
 
-    console.log(request);
-
     var cookies = {
       manual_input: manual_input,
       car_brand: car_brand,
@@ -235,33 +233,49 @@ $(document).ready(function() {
           $("dialog#route-calculation-modal").prop("open", false);
         },
         success: function(data){
-            console.log(data);
             if (data.status === "success"){
-              $("dialog#info-modal article details#summary").append(`<li>Estimated time: ${convertTime(data["total time"])}</li>`);
+              $("dialog#info-modal article details#summary").append(`<li><b>Estimated time:</b> ${convertTime(data["total time"])}</li>`);
               
               for (var i = 0; i < data["solution detail"].length; i++){
+                const img_url = `static/img/station_banner/${(data["solution detail"][i].Provider).toLowerCase()}.png`;
+                const station_address = data["solution detail"][i].Address;
+                const station_name = data["solution detail"][i].Name;
+                const arrival_battery = convertBattery(data["solution data"]["arrival battery"][i],battery_capacity);
+                const target_battery = convertBattery(data["solution data"]["target battery"][i],battery_capacity);
+                const charging_time = convertTime(data["solution data"]["charging time"][i]);
+                const driving_time = convertTime(data["solution data"]["driving time"][i]);
+                const total_time = convertTime(data["solution data"]["total time"][i]);
+
                 $("dialog#info-modal article details#charging-stops ol").append(`
-                <li><i class="fa-solid fa-charging-station"></i> Details: 
+                <li>
+                  <img src=${img_url} alt="Charging station image" style="width: 30px; height: 30px; border-radius: 50%">
+                  <b>${data["solution detail"][i].Provider} Station Details:</b>
                   <ul>
-                    <li>Station name: ${data["solution detail"][i].Name}</li>
-                    <li>Address: ${data["solution detail"][i].Address}</li>
-                    <li>Arrival battery: ${data["solution data"]["arrival battery"][i]*battery_capacity} kWh</li>
-                    <li>Target battery: ${data["solution data"]["target battery"][i]*battery_capacity} kWh</li>
-                    <li>Charging time: ${convertTime(data["solution data"]["charging time"][i])}</li>
-                    <li>Driving time: ${convertTime(data["solution data"]["driving time"][i])}</li>
-                    <li>Total time: ${convertTime(data["solution data"]["total time"][i])}</li>
+                    <li><b>Station name:</b> ${station_name}</li>
+                    <li><b>Address:</b> ${station_address}</li>
+                    <li><b>Arrival battery:</b> ${arrival_battery}%</li>
+                    <li><b>Target battery:</b> ${target_battery}%</li>
+                    <li><b>Charging time:</b> ${charging_time}</li>
+                    <li><b>Driving time:</b> ${driving_time}</li>
+                    <li><b>Total time:</b> ${total_time}</li>
                   </ul>
                 </li>`);
               }
 
               calculateAndDisplayRoute(data, origin, destination);
               $("html, body").animate({ scrollTop: document.body.scrollHeight }, "slow");
+              $("dialog#info-modal").prop("open", true);
+
             }else{
-              alert("Error: failed to optimize route, Please try again.");
+              $("dialog#error-modal article p#error-message").text("We were unable to optimize the route based on the provided locations. Please consider adjusting your starting or destination location and try again.");
+              $("dialog#error-modal").prop("open", true);
             }
         },
         error: function(error){
           console.log(error);
+          $("dialog#error-modal article p#error-message").text("An unexpected issue occurred. Please try again later or contact support for further assistance.");
+          $("dialog#error-modal article small").html("<strong>ERROR MESSAGE:</strong> " + error.responseJSON.error);
+          $("dialog#error-modal").prop("open", true);
         }
 
     });
@@ -326,32 +340,31 @@ $(document).ready(function() {
 
 
 function calculateAndDisplayRoute(response_data, origin, destination){
+  const waypts = [];
+  var route = response_data["solution detail"];
 
-    const waypts = [];
-    var route = response_data["solution detail"];
+  for (var i = 0; i < route.length; i++){
+      waypts.push({
+          location: { lat: route[i].Latitude, lng: route[i].Longitude },
+          stopover: true
+      });
+  }
 
-    for (var i = 0; i < route.length; i++){
-        waypts.push({
-            location: { lat: route[i].Latitude, lng: route[i].Longitude },
-            stopover: true
-        });
-    }
+  var request = {
+      origin: origin,
+      destination: destination,
+      waypoints: waypts,
+      optimizeWaypoints: true,
+      travelMode: google.maps.TravelMode.DRIVING
+  };
 
-    var request = {
-        origin: origin,
-        destination: destination,
-        waypoints: waypts,
-        optimizeWaypoints: true,
-        travelMode: google.maps.TravelMode.DRIVING
-    };
-
-    directionsService.route(request, function(result, status){
-        if (status === google.maps.DirectionsStatus.OK){
-            directionsRenderer.setDirections(result);
-        }else{
-            alert("Error: failed to optimize route.");
-        }
-    });
+  directionsService.route(request, function(result, status){
+      if (status === google.maps.DirectionsStatus.OK){
+          directionsRenderer.setDirections(result);
+      }else{
+          alert("Error: failed to optimize route.");
+      }
+  });
 
 }
 
@@ -362,10 +375,13 @@ function infoButton() {
   return btn[0];
 }
 
-
 function convertTime(time){
   var hours = Math.floor(time);
   var minutes = Math.floor((time - hours) * 60);
   var seconds = Math.round((time - hours - minutes / 60) * 3600);
   return `${hours} hours ${minutes} minutes ${seconds} seconds`;
+}
+
+function convertBattery(current, capacity){
+  return Math.round((current/capacity)*100);
 }
