@@ -11,14 +11,13 @@ from django.conf import settings
 from pymongo import MongoClient
 from bson import json_util
 
-
 # ----------------- Views -----------------
 
-def GoogleMaps(request):
+def index(request):
     args = {}
     args['google_maps_api_key'] = settings.GOOGLE_MAPS_API_KEY
 
-    return render(request, 'GoogleMaps.html', args)
+    return render(request, 'base.html', args)
 
 
 # ----------------- API -----------------

@@ -1,12 +1,12 @@
 # example/urls.py
 from django.urls import path
 
-from ev_charging_planner.views import GoogleMaps, allStation, evCar_data
+from ev_charging_planner.views import index, allStation, evCar_data
 
 urlpatterns = [
-    path('', GoogleMaps, name='GoogleMaps'),
+    path('', index, name='index'),
     
     # API
-    path('api/all_station', allStation),
-    path('api/ev_car_data', evCar_data),
+    path('api/all_station', allStation, name='all_station'),
+    path('api/ev_car_data', evCar_data, name='ev_car_data'),
 ]
