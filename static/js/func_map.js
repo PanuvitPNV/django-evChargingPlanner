@@ -11,7 +11,6 @@ const directionsRenderer = new google.maps.DirectionsRenderer({suppressMarkers: 
 let map;
 let markers = [];
 
-
 // Async function to initialize the map
 async function initMap() {
   
@@ -32,87 +31,7 @@ async function initMap() {
     map = new Map(document.getElementById("map"), {
       center: userLocation,
       zoom: 16,
-    //   mapId: 'aa02cb992666fba3',
-      styles: [
-        { elementType: "geometry", stylers: [{ color: "#242f3e" }] },
-        { elementType: "labels.text.stroke", stylers: [{ color: "#242f3e" }] },
-        { elementType: "labels.text.fill", stylers: [{ color: "#746855" }] },
-        {
-          featureType: "administrative.locality",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#d59563" }],
-        },
-        {
-          featureType: "poi",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#d59563" }],
-        },
-        {
-          featureType: "poi.park",
-          elementType: "geometry",
-          stylers: [{ color: "#263c3f" }],
-        },
-        {
-          featureType: "poi.park",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#6b9a76" }],
-        },
-        {
-          featureType: "road",
-          elementType: "geometry",
-          stylers: [{ color: "#38414e" }],
-        },
-        {
-          featureType: "road",
-          elementType: "geometry.stroke",
-          stylers: [{ color: "#212a37" }],
-        },
-        {
-          featureType: "road",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#9ca5b3" }],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry",
-          stylers: [{ color: "#746855" }],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry.stroke",
-          stylers: [{ color: "#1f2835" }],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#f3d19c" }],
-        },
-        {
-          featureType: "transit",
-          elementType: "geometry",
-          stylers: [{ color: "#2f3948" }],
-        },
-        {
-          featureType: "transit.station",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#d59563" }],
-        },
-        {
-          featureType: "water",
-          elementType: "geometry",
-          stylers: [{ color: "#17263c" }],
-        },
-        {
-          featureType: "water",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#515c6d" }],
-        },
-        {
-          featureType: "water",
-          elementType: "labels.text.stroke",
-          stylers: [{ color: "#17263c" }],
-        },
-      ],
+      mapId: 'aa02cb992666fba3',
       disableDefaultUI: true,
     });
 
@@ -126,13 +45,13 @@ async function initMap() {
     });
   }
 
-    directionsRenderer.setMap(map);
-    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(infoButton());
-    
+  directionsRenderer.setMap(map);
+  map.controls[google.maps.ControlPosition.TOP_RIGHT].push(infoButton());
 }
 
 initMap();
 
+// Event listener for the info button
 const originInput = document.getElementById("search-origin");
 const destinationInput = document.getElementById("search-destination");
 
@@ -146,25 +65,25 @@ destinationInput.addEventListener("focus", () => {
 
 originInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
-      e.preventDefault();
+    e.preventDefault();
   }
 });
 
 destinationInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
-      e.preventDefault();
+    e.preventDefault();
   }
 });
 
 originInput.addEventListener("input", () => {
   if (originInput.value) {
-      originInput.classList.remove("is-invalid");
+    originInput.classList.remove("is-invalid");
   }
 });
 
 destinationInput.addEventListener("input", () => {
   if (destinationInput.value) {
-      destinationInput.classList.remove("is-invalid");
+    destinationInput.classList.remove("is-invalid");
   }
 });
 
@@ -176,8 +95,8 @@ const options = {
 const originAutocomplete = new Autocomplete(originInput, options);
 const destinationAutocomplete = new Autocomplete(destinationInput, options);
 
+// JQuery functions
 $(document).ready(function() {
-
   $("#user-input").on('submit',function(){
     event.preventDefault(); // Prevent the form from submitting normally
 
@@ -194,19 +113,19 @@ $(document).ready(function() {
 
     $("input#charging-checkbox").each(function(){
         if ($(this).prop("checked")){
-            charging_ports.push($(this).attr("name"));
+          charging_ports.push($(this).attr("name"));
         }
     });
 
     var request = {
-        origin_address: origin,
-        destination_address: destination,
-        car_brand: car_brand,
-        car_model: car_model,
-        battery_initial: battery_initial,
-        battery_arrival: battery_arrival,
-        battery_capacity: battery_capacity,
-        charging_ports: charging_ports.join(",")
+      origin_address: origin,
+      destination_address: destination,
+      car_brand: car_brand,
+      car_model: car_model,
+      battery_initial: battery_initial,
+      battery_arrival: battery_arrival,
+      battery_capacity: battery_capacity,
+      charging_ports: charging_ports.join(",")
     };
 
     var cookies = {
@@ -219,75 +138,74 @@ $(document).ready(function() {
 
     setCookie(cookies, 180);
     $("dialog#route-calculation-modal").prop("open", true);
+    $("#gmap-links").prop("href", "https://www.google.com/maps");
 
     $.ajax({
-        url: 'https://api-ev-charging-planner-be9tw.ondigitalocean.app/optimize',
-        type: 'POST',
-        crossDomain: true,
-        data: JSON.stringify(request),
-        contentType: "application/json;",
-        traditional: true,
-        beforeSend: function(){
-          for (var i = 0; i < markers.length; i++){
-            markers[i].setMap(null);
-          }
-          markers = [];
-
-          $("dialog#info-modal article details#summary li").remove();
-          $("dialog#info-modal article details#charging-stops ol li").remove();
-        },
-        complete: function(){
-          $("dialog#route-calculation-modal").prop("open", false);
-        },
-        success: function(data){
-            if (data.status === "success"){
-              $("dialog#info-modal article details#summary").append(`<li><b>Estimated time:</b> ${convert_time(data["total time"])}</li>`);
-              
-              for (var i = 0; i < data["solution detail"].length; i++){
-                const img_url = `static/img/station_logo/${(data["solution detail"][i].Provider).toLowerCase()}.png`;
-                const station_address = data["solution detail"][i].Address;
-                const station_name = data["solution detail"][i].Name;
-                const arrival_battery = convert_battery(data["solution data"]["arrival battery"][i],battery_capacity);
-                const target_battery = convert_battery(data["solution data"]["target battery"][i],battery_capacity);
-                const charging_time = convert_time(data["solution data"]["charging time"][i]);
-                const driving_time = convert_time(data["solution data"]["driving time"][i]);
-                const total_time = convert_time(data["solution data"]["total time"][i]);
-
-                $("dialog#info-modal article details#charging-stops ol").append(`
-                <li>
-                  <img src=${img_url} alt="Charging station image" style="width: 30px; height: 30px; border-radius: 50%">
-                  <b>${data["solution detail"][i].Provider} Station Details:</b>
-                  <ul>
-                    <li><b>Station name:</b> ${station_name}</li>
-                    <li><b>Address:</b> ${station_address}</li>
-                    <li><b>Arrival battery:</b> ${arrival_battery}%</li>
-                    <li><b>Target battery:</b> ${target_battery}%</li>
-                    <li><b>Charging time:</b> ${charging_time}</li>
-                    <li><b>Driving time:</b> ${driving_time}</li>
-                    <li><b>Total time:</b> ${total_time}</li>
-                  </ul>
-                </li>`);
-              }
-
-              calculateAndDisplayRoute(data, origin, destination);
-              $("html, body").animate({ scrollTop: document.body.scrollHeight }, "slow");
-              $("dialog#info-modal").prop("open", true);
-
-            }else{
-              $("dialog#error-modal article p#error-message").text("We were unable to optimize the route based on the provided locations. Please consider adjusting your starting or destination location and try again.");
-              $("dialog#error-modal").prop("open", true);
-            }
-        },
-        error: function(error){
-          const errorMessage = error.responseJSON?.error ?? "Server timeout.";
-
-          $("dialog#error-modal article p#error-message").text("An unexpected issue occurred. Please try again later or contact support for further assistance.");
-          $("dialog#error-modal article small").html("<strong>ERROR MESSAGE:</strong> " + errorMessage);
-          $("dialog#error-modal").prop("open", true);
+      url: 'https://api-ev-charging-planner-be9tw.ondigitalocean.app/optimize',
+      type: 'POST',
+      crossDomain: true,
+      contentType: "application/json",
+      data: JSON.stringify(request),
+      beforeSend: function(){
+        for (var i = 0; i < markers.length; i++){
+          markers[i].setMap(null);
         }
+        markers = [];
 
+        $("dialog#info-modal article details#summary li").remove();
+        $("dialog#info-modal article details#charging-stops ol li").remove();
+      },
+      complete: function(){
+        $("dialog#route-calculation-modal").prop("open", false);
+      },
+      success: function(data){
+        displayResult(data, origin, destination, battery_capacity);
+      },
+      error: function(error){
+        const errorMessage = error.responseJSON?.error ?? "Server timeout.";
+        $("dialog#error-modal article p#error-message").text("An unexpected issue occurred. Please try again later or contact support for further assistance.");
+        $("dialog#error-modal article small").html("<strong>ERROR MESSAGE:</strong> " + errorMessage);
+        $("dialog#error-modal").prop("open", true);
+      }
     });
   });
+
+  function displayResult(response, origin, destination, battery_capacity){
+    if (response.status === "success"){
+      $("dialog#info-modal article details#summary").append(`<li><b>Estimated time:</b> ${convert_time(response["total time"])}</li>`);
+      for (var i = 0; i < response["solution detail"].length; i++){
+        const img_url = `static/img/station_logo/${(response["solution detail"][i].Provider).toLowerCase()}.png`;
+        const station_address = response["solution detail"][i].Address;
+        const station_name = response["solution detail"][i].Name;
+        const arrival_battery = convert_battery(response["solution data"]["arrival battery"][i],battery_capacity);
+        const target_battery = convert_battery(response["solution data"]["target battery"][i],battery_capacity);
+        const charging_time = convert_time(response["solution data"]["charging time"][i]);
+        const driving_time = convert_time(response["solution data"]["driving time"][i]);
+        const total_time = convert_time(response["solution data"]["total time"][i]);
+
+        $("dialog#info-modal article details#charging-stops ol").append(`
+        <li>
+          <img src=${img_url} alt="Charging station image" style="width: 30px; height: 30px; border-radius: 50%">
+          <b>${response["solution detail"][i].Provider} Station Details:</b>
+          <ul>
+            <li><b>Station name:</b> ${station_name}</li>
+            <li><b>Address:</b> ${station_address}</li>
+            <li><b>Arrival battery:</b> ${arrival_battery}%</li>
+            <li><b>Target battery:</b> ${target_battery}%</li>
+            <li><b>Charging time:</b> ${charging_time}</li>
+            <li><b>Driving time:</b> ${driving_time}</li>
+            <li><b>Total time:</b> ${total_time}</li>
+          </ul>
+        </li>`);
+      }
+      calculateAndDisplayRoute(response, origin, destination);
+      $("html, body").animate({ scrollTop: document.body.scrollHeight }, "slow");
+      $("dialog#info-modal").prop("open", true);
+    }else{
+      $("dialog#error-modal article p#error-message").text("We were unable to optimize the route based on the provided locations. Please consider adjusting your starting or destination location and try again.");
+      $("dialog#error-modal").prop("open", true);
+    }
+  }
 
   function setCookie(cookies, exdays){
     var d = new Date();
@@ -305,7 +223,7 @@ $(document).ready(function() {
     for (var i = 0; i < ca.length; i++){
         var c = ca[i];
         while (c.charAt(0) == ' '){
-            c = c.substring(1);
+          c = c.substring(1);
         }
         var key = c.split('=')[0];
         var value = c.split('=')[1];
@@ -336,7 +254,7 @@ $(document).ready(function() {
     if (cookies["charging_ports"] !== "null" && cookies["charging_ports"] !== "" && cookies["charging_ports"] !== undefined){
       var charging_ports = cookies["charging_ports"].split(",");
       for (var i = 0; i < charging_ports.length; i++){
-          $("input[name=" + charging_ports[i] + "]").prop("checked", true);
+        $("input[name=" + charging_ports[i] + "]").prop("checked", true);
       }
     }
   }
@@ -350,37 +268,38 @@ function calculateAndDisplayRoute(response_data, origin, destination){
   var route = response_data["solution detail"];
 
   for (var i = 0; i < route.length; i++){
-      waypts.push({
-          location: { lat: route[i].Latitude, lng: route[i].Longitude },
-          stopover: true
-      });
+    waypts.push({
+      location: { lat: route[i].Latitude, lng: route[i].Longitude },
+      stopover: true
+    });
   }
 
   var request = {
-      origin: origin,
-      destination: destination,
-      waypoints: waypts,
-      optimizeWaypoints: true,
-      travelMode: google.maps.TravelMode.DRIVING
+    origin: origin,
+    destination: destination,
+    waypoints: waypts,
+    optimizeWaypoints: true,
+    travelMode: google.maps.TravelMode.DRIVING
   };
 
   directionsService.route(request, function(result, status){
-      if (status === google.maps.DirectionsStatus.OK){
-        directionsRenderer.setDirections(result);
-        
-        var origin_leg = result.routes[0].legs[0];
-        var destination_leg = result.routes[0].legs[result.routes[0].legs.length - 1];
+    if (status === google.maps.DirectionsStatus.OK){
+      directionsRenderer.setDirections(result);
+      
+      var origin_leg = result.routes[0].legs[0];
+      var destination_leg = result.routes[0].legs[result.routes[0].legs.length - 1];
 
-        markers.push(make_marker(origin_leg.start_location, "origin"));
-        markers.push(make_marker(destination_leg.end_location, "destination"));
+      markers.push(make_marker(origin_leg.start_location, "origin"));
+      markers.push(make_marker(destination_leg.end_location, "destination"));
 
-        for (var i = 0; i < route.length; i++){
-          markers.push(make_marker({ lat: route[i].Latitude, lng: route[i].Longitude }, route[i].Provider.toLowerCase(), route[i]));
-        }
-
-      }else{
-        alert("Error: failed to optimize route.");
+      for (var i = 0; i < route.length; i++){
+        markers.push(make_marker({ lat: route[i].Latitude, lng: route[i].Longitude }, route[i].Provider.toLowerCase(), route[i]));
       }
+
+      navigator_button(result);
+    }else{
+      alert("Error: failed to optimize route.");
+    }
   });
 
 }
@@ -412,7 +331,7 @@ function make_marker(position, title, data = null){
         scaledSize: new google.maps.Size(36, 45),
       },
   });
-  
+
   var contentString;
 
   if (title === "origin" || title === "destination"){
@@ -440,31 +359,8 @@ function make_marker(position, title, data = null){
         <p style="color: black;"><strong>SuperchargersCount:</strong> ${data.SuperchargersCount}</p>
       </div>
     </div>`;
-
-    // contentString = `
-    // <article style="max-height: 10rem; overflow-y: auto; margin: 10px;">
-    //   <header>
-    //     <img src="static/img/station_logo/${title}.png" align="left" alt="Charging station image" style="width: 30px; height: 30px; border-radius: 50%; margin-right: 10px;">
-    //     <h6 style="color: black;">${data.Name}</h6>
-    //   </header>
-    //   <div>
-    //     <p style="color: black;"><strong>Provider:</strong> ${data.Provider}</p>
-    //     <p style="color: black;"><strong>Address:</strong> ${data.Address}</p>
-    //     <p style="color: black;"><strong>Power:</strong> ${data.Power}</p>
-    //     <p style="color: black;"><strong>Type1:</strong> ${data.Type1}</p>
-    //     <p style="color: black;"><strong>Type1Count:</strong> ${data.Type1Count}</p>
-    //     <p style="color: black;"><strong>Type2:</strong> ${data.Type2}</p>
-    //     <p style="color: black;"><strong>Type2Count:</strong> ${data.Type2Count}</p>
-    //     <p style="color: black;"><strong>CCS2:</strong> ${data.CCS2}</p>
-    //     <p style="color: black;"><strong>CCS2Count:</strong> ${data.CCS2Count}</p>
-    //     <p style="color: black;"><strong>CHAdeMO:</strong> ${data.CHAdeMO}</p>
-    //     <p style="color: black;"><strong>CHAdeMOCount:</strong> ${data.CHAdeMOCount}</p>
-    //     <p style="color: black;"><strong>Superchargers:</strong> ${data.Superchargers}</p>
-    //     <p style="color: black;"><strong>SuperchargersCount:</strong> ${data.SuperchargersCount}</p>
-    //   </div>
-    // </article>`;
   }
-    
+
   var infowindow = new google.maps.InfoWindow({
       content: contentString,
   });
@@ -476,4 +372,27 @@ function make_marker(position, title, data = null){
   return marker;
 }
 
+function navigator_button(response) {
+  var origin = response.routes[0].legs[0].start_location;
+  var destination = response.routes[0].legs[response.routes[0].legs.length - 1].end_location;
+  var waypoints = [];
 
+  var origin_location = origin.lat() + "," + origin.lng();
+  var destination_location = destination.lat() + "," + destination.lng();
+
+  var url = "https://www.google.com/maps/dir/?api=1&origin=" + origin_location + "&destination=" + destination_location;
+
+  for (var i = 0; i < response.routes[0].legs.length - 1; i++){
+    var waypoint = response.routes[0].legs[i].end_location;
+    var waypoint_location = waypoint.lat() + "," + waypoint.lng();
+    waypoints.push(waypoint_location);
+  }
+
+  if (waypoints.length > 0){
+    url += "&waypoints=" + waypoints.join("|");
+  }
+
+  url += "&travelmode=driving";
+
+  document.getElementById("gmap-links").href = url;
+}
