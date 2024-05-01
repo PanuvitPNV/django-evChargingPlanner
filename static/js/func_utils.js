@@ -25,7 +25,6 @@ $(document).ready(function() {
   
     $("#car-brand").change(function() {
       var brand = $(this).val();
-      console.log(brand);
       var modelSelect = $("#car-model");
       var batteryCapacity = $("#battery-capacity");
   
