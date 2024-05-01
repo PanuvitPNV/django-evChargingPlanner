@@ -24,61 +24,59 @@ def allStation(request):
 def evCar_data(request):
 
     # data from --> https://ev-database.org/
+    
+    data = [
+        {
+            "brand": "BMW",
+            "model": "iX3",
+            "useable_capacity": "74.0 kWh",
+            "charging_port": ["Type2", "CCS2"],
+        },
+        {
+            "brand": "BYD",
+            "model": "ATTO 3",
+            "useable_capacity": "60.5 kWh",
+            "charging_port": ["Type2", "CCS2"],
+        },
+        {
+            "brand": "BYD",
+            "model": "HAN",
+            "useable_capacity": "85.4 kWh",
+            "charging_port": ["Type2", "CCS2"],
+        },
+        {
+            "brand": "Nissan",
+            "model": "Leaf",
+            "useable_capacity": "39.0 kWh",
+            "charging_port": ["Type2", "CHAdeMO"],
+        },
+        {
+            "brand": "Tesla",
+            "model": "Model 3",
+            "useable_capacity": "57.5 kWh",
+            "charging_port": ["Type2", "CCS2"],
+        },
+        {
+            "brand": "Tesla",
+            "model": "Model Y",
+            "useable_capacity": "57.5 kWh",
+            "charging_port": ["Type2", "CCS2"],
+        },
+        {
+            "brand": "Tesla",
+            "model": "Model S Dual Motor",
+            "useable_capacity": "95.0 kWh",
+            "charging_port": ["Type2", "CCS2"],
+        },
+        {
+            "brand": "Tesla",
+            "model": "Model S Plaid",
+            "useable_capacity": "95.0 kWh",
+            "charging_port": ["Type2", "CCS2"],
+        },
+    ]
 
-    if request.method == 'GET':
-
-        data = [
-            {
-                "brand": "BMW",
-                "model": "iX3",
-                "useable_capacity": "74.0 kWh",
-                "charging_port": ["Type2", "CCS2"],
-            },
-            {
-                "brand": "BYD",
-                "model": "ATTO 3",
-                "useable_capacity": "60.5 kWh",
-                "charging_port": ["Type2", "CCS2"],
-            },
-            {
-                "brand": "BYD",
-                "model": "HAN",
-                "useable_capacity": "85.4 kWh",
-                "charging_port": ["Type2", "CCS2"],
-            },
-            {
-                "brand": "Nissan",
-                "model": "Leaf",
-                "useable_capacity": "39.0 kWh",
-                "charging_port": ["Type2", "CHAdeMO"],
-            },
-            {
-                "brand": "Tesla",
-                "model": "Model 3",
-                "useable_capacity": "57.5 kWh",
-                "charging_port": ["Type2", "CCS2"],
-            },
-            {
-                "brand": "Tesla",
-                "model": "Model Y",
-                "useable_capacity": "57.5 kWh",
-                "charging_port": ["Type2", "CCS2"],
-            },
-            {
-                "brand": "Tesla",
-                "model": "Model S Dual Motor",
-                "useable_capacity": "95.0 kWh",
-                "charging_port": ["Type2", "CCS2"],
-            },
-            {
-                "brand": "Tesla",
-                "model": "Model S Plaid",
-                "useable_capacity": "95.0 kWh",
-                "charging_port": ["Type2", "CCS2"],
-            },
-        ]
-
-        return JsonResponse(data, safe=False)
+    return JsonResponse(data, safe=False)
 
 # ----------------- Helper Functions -----------------
 

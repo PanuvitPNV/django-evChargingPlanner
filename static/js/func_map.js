@@ -259,7 +259,9 @@ $(document).ready(function() {
     }
   }
   
-  populateCookie();
+  setTimeout(() => {
+    populateCookie();
+  }, 1000);
 
 });
 
