@@ -261,6 +261,7 @@ $(document).ready(function() {
   
   setTimeout(() => {
     populateCookie();
+    $("#fetch-data-modal").prop("open", false);
   }, 1000);
 
 });

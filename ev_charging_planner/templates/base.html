@@ -15,7 +15,7 @@
   <script src="https://kit.fontawesome.com/79b0cd4bc5.js" crossorigin="anonymous" ></script>
 
   <!-- Pico CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
+  <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
 
   <!-- Custom CSS -->
   <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
@@ -187,6 +187,10 @@
         <p>This process may require a few moments to complete. ⏳</p>
         <p>Your patience is appreciated. 🙏</p>
     </article>
+  </dialog>
+
+  <dialog id="fetch-data-modal" open>
+    <h3 aria-busy="true">Please Wait ...</h3>
   </dialog>
 
   <script > 
