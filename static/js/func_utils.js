@@ -55,7 +55,7 @@ $(document).ready(function() {
   
       carData.forEach(function(car) {
         if (car.model === model && car.brand === brand) {
-          batteryCapacity.val(car.useable_capacity.split(" ")[0]);
+          batteryCapacity.val(car.battery.useable_capacity.split(" ")[0]);
           var chargingPort = car.charging_port;
           $("input#charging-checkbox").prop("checked", false);
           for (var i = 0; i < chargingPort.length; i++) {

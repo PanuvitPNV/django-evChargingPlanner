@@ -126,5 +126,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # environment variables
-MONGODB_URI = os.getenv('MONGODB_URI')
+MONGODB_STATION_URI = os.getenv('MONGODB_STATION_URI')
+MONGODB_CAR_URI = os.getenv('MONGODB_CAR_URI')
 GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
