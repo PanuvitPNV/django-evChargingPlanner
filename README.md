@@ -1,106 +1,41 @@
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fpython%2Fdjango&demo-title=Django%20%2B%20Vercel&demo-description=Use%20Django%204%20on%20Vercel%20with%20Serverless%20Functions%20using%20the%20Python%20Runtime.&demo-url=https%3A%2F%2Fdjango-template.vercel.app%2F&demo-image=https://assets.vercel.com/image/upload/v1669994241/random/django.png)
+# django-evChargingPlanner
 
-# Django + Vercel
+**django-evChargingPlanner** is a Django web application designed to help users efficiently plan their electric vehicle (EV) charging schedule. Whether you're managing routes for personal electric vehicles or planning your own charging routine, this tool can assist you in optimizing your charging routines to minimize costs and maximize convenience.
 
-This example shows how to use Django 4 on Vercel with Serverless Functions using the [Python Runtime](https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/python).
+## Table of Contents
 
-## Demo
+- [Features](#features)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
 
-https://django-template.vercel.app/
+## Features
 
-## How it Works
+- **Route Planning**: Plan routes for your electric vehicles, considering available charging stations along the way.
+- **Charging Schedule Optimization**: Automatically generate optimal charging schedules based on user preferences and vehicle specifications.
+- **Integration with Google Maps**: Seamlessly open routing directions in Google Maps for planned routes, providing users with navigation assistance.
+- **Access Charging Station Information**: Users can view details about charging stations, including location and available charging ports, though real-time availability information may not be provided.
+- **User-Friendly Interface**: Intuitive web interface for easy navigation and interaction.
+- **Automatic Car Model Recognition**: Users can choose their car brand and model, and the application will autofill the car's battery capacity (kWh) and charging port details. Alternatively, users can manually select the battery capacity and charging port.
+- **Customizable Battery Levels**: Users can choose the initial and arrival battery percentages to tailor charging schedules to their specific needs.
 
-Our Django application, `example` is configured as an installed application in `vercel_app/settings.py`:
-
-```python
-# vercel_app/settings.py
-INSTALLED_APPS = [
-    # ...
-    'example',
-]
-```
-
-We allow "\*.vercel.app" subdomains in `ALLOWED_HOSTS`, in addition to 127.0.0.1:
-
-```python
-# vercel_app/settings.py
-ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
-```
-
-The `wsgi` module must use a public variable named `app` to expose the WSGI application:
-
-```python
-# vercel_app/wsgi.py
-app = get_wsgi_application()
-```
-
-The corresponding `WSGI_APPLICATION` setting is configured to use the `app` variable from the `vercel_app.wsgi` module:
-
-```python
-# vercel_app/settings.py
-WSGI_APPLICATION = 'vercel_app.wsgi.app'
-```
-
-There is a single view which renders the current time in `example/views.py`:
-
-```python
-# example/views.py
-from datetime import datetime
-
-from django.http import HttpResponse
+## Usage
 
 
-def index(request):
-    now = datetime.now()
-    html = f'''
-    <html>
-        <body>
-            <h1>Hello from Vercel!</h1>
-            <p>The current time is { now }.</p>
-        </body>
-    </html>
-    '''
-    return HttpResponse(html)
-```
+## Contributing
 
-This view is exposed a URL through `example/urls.py`:
+Contributions are welcome! Please feel free to submit issues or pull requests to help improve this project.
 
-```python
-# example/urls.py
-from django.urls import path
+## License
 
-from example.views import index
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## Acknowledgments
 
-urlpatterns = [
-    path('', index),
-]
-```
+- This project was inspired by the growing need for efficient electric vehicle charging solutions.
+- Special thanks to the Django community for providing robust tools for web development.
+- Thanks to Vercel for providing a platform to deploy web applications.
+- Thanks to ev-database.org for providing valuable electric vehicle data.
+- Special gratitude to the Department of Computer Science and Department of Data Science, Faculty of Science, Chiang Mai University, for providing the opportunity to participate in this project.
 
-Finally, it's made accessible to the Django server inside `vercel_app/urls.py`:
-
-```python
-# vercel_app/urls.py
-from django.urls import path, include
-
-urlpatterns = [
-    ...
-    path('', include('example.urls')),
-]
-```
-
-This example uses the Web Server Gateway Interface (WSGI) with Django to enable handling requests on Vercel with Serverless Functions.
-
-## Running Locally
-
-```bash
-python manage.py runserver
-```
-
-Your Django application is now available at `http://localhost:8000`.
-
-## One-Click Deploy
-
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fexamples%2Ftree%2Fmain%2Fpython%2Fdjango&demo-title=Django%20%2B%20Vercel&demo-description=Use%20Django%204%20on%20Vercel%20with%20Serverless%20Functions%20using%20the%20Python%20Runtime.&demo-url=https%3A%2F%2Fdjango-template.vercel.app%2F&demo-image=https://assets.vercel.com/image/upload/v1669994241/random/django.png)
