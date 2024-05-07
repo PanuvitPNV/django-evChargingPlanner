@@ -262,7 +262,7 @@ $(document).ready(function() {
   setTimeout(() => {
     populateCookie();
     $("#fetch-data-modal").prop("open", false);
-  }, 3000);
+  }, 5000);
 
 });
 
