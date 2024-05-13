@@ -1,6 +1,6 @@
-# django-evChargingPlanner
+# EV Charging Planner
 
-**django-evChargingPlanner** is a Django web application designed to help users efficiently plan their electric vehicle (EV) charging schedule. Whether you're managing routes for personal electric vehicles or planning your own charging routine, this tool can assist you in optimizing your charging routines to minimize costs and maximize convenience.
+**EV Charging Planner** is a web application designed to help users efficiently plan their electric vehicle (EV) charging schedule. Whether you're managing routes for personal electric vehicles or planning your own charging routine, this tool can assist you in optimizing your charging routines to minimize costs and maximize convenience.
 
 ## Table of Contents
 
@@ -21,7 +21,13 @@
 - **Customizable Battery Levels**: Users can choose the initial and arrival battery percentages to tailor charging schedules to their specific needs.
 
 ## Usage
+This web application is designed to help EV (Electric Vehicle) owners plan their charging sessions effectively. Here's how you can use the application:
 
+1. **Select Your EV:** Start by selecting your electric vehicle's brand and model from the provided list. If your vehicle is not listed, you can manually enter the details, including the make, model, and battery capacity.
+2. **Set Battery Levels:** Specify the initial battery level (percentage or range) when starting your journey, as well as the desired arrival battery level at your destination.
+3. **Choose Locations:** Select your origin and destination locations from the dropdown lists. The application will populate these lists with available options based on your geographical region or data sources.
+4. **Search for Route and Charging Stops:** After providing the required information, click the "Search Direction" button. The application will calculate an optimal route, taking into account your vehicle's range, battery levels, and charging requirements. It will suggest charging stops along the way, if needed.
+5. **Review Results:** Wait for the application to process your request and display the results. This will include the recommended route, charging stop locations (if applicable), and any other relevant information, such as estimated travel time and energy consumption.
 
 ## Contributing
 
