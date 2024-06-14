@@ -1,3 +1,7 @@
+> [!IMPORTANT]
+> **Notice of Discontinuation**: We are discontinuing the use of jQuery in favor of Vue.js. This change is aimed at improving the maintainability and performance of our codebase. Please ensure that all new development and any updates to existing features use Vue.js going forward. If you have any questions or need assistance with this transition, contact the development team.
+
+
 # EV Charging Planner
 
 **EV Charging Planner** is a web application designed to help users efficiently plan their electric vehicle (EV) charging schedule. Whether you're managing routes for personal electric vehicles or planning your own charging routine, this tool can assist you in optimizing your charging routines to minimize costs and maximize convenience.
