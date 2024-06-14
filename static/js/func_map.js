@@ -308,11 +308,18 @@ function calculateAndDisplayRoute(response_data, origin, destination){
 }
 
 function infoButton() {
-  var btn = $(`<div id="info-button-container" style="text-align: right; margin: 10px">
-                  <button id="info-button" class="contrast" data-target="info-modal" onclick="toggleModal(event)"><i class="fa-solid fa-circle-info"></i></button>
-              </div>`);
+  var btn = $(`<button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="text-align: right; margin: 10px">
+                  <i class="fa-solid fa-circle-info"></i>
+                </button>`);
   return btn[0];
 }
+
+// function infoButton() {
+//   var btn = $(`<div id="info-button-container" style="text-align: right; margin: 10px">
+//                   <button id="info-button" class="contrast" data-target="info-modal" onclick="toggleModal(event)"><i class="fa-solid fa-circle-info"></i></button>
+//               </div>`);
+//   return btn[0];
+// }
 
 function convert_time(time){
   var hours = Math.floor(time);

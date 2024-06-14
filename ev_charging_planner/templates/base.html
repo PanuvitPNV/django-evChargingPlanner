@@ -2,208 +2,227 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="color-scheme" content="light dark" />
-	<title>EV Charging Planner</title>
-  <meta name="description" content="Plan your electric vehicle journey with ease" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>EV Charging Planner</title>
+    <meta name="description" content="Plan your electric vehicle journey with ease" />
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
-  <script src="https://kit.fontawesome.com/79b0cd4bc5.js" crossorigin="anonymous" ></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <script src="https://kit.fontawesome.com/79b0cd4bc5.js" crossorigin="anonymous"></script>
 
-  <!-- Pico CSS -->
-  <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-  <!-- Custom CSS -->
-  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 
-  <!-- favicon -->
-  <link rel="shortcut icon" id="emojicon" href="/favicon.ico" />
-  <script src="https://unpkg.com/emojicon"></script>
-  <script> emojicon.set('🐋'); </script>
+    <!-- favicon -->
+    <link rel="shortcut icon" id="emojicon" href="#" />
+    <script src="https://unpkg.com/emojicon"></script>
+    <script>
+        emojicon.set('🐋');
+    </script>
 
-  <!-- JQuery -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-  <script type="module" src="{% static 'js/func_map.js' %}"></script>
-  <script src="{% static 'js/func_utils.js' %}"></script>
-  <script src="{% static 'js/func_validate.js' %}"></script>
+    <script type="module" src="{% static 'js/func_map.js' %}"></script>
+    <script src="{% static 'js/func_utils.js' %}"></script>
+    <script src="{% static 'js/func_validate.js' %}"></script>
 </head>
 
 <body>
-  <div class="container">
-    <nav>
-      <ul>
-        <li>
-          <hgroup>
-            <h3>🐋 EV Charging Planner</h3>
-            <small>Plan your electric vehicle journey with ease</small>
-          </hgroup>
-        </li>
-      </ul>
-      <ul>
-        <li><a href="https://github.com/PanuvitPNV/django-evChargingPlanner" target="_blank" class="secondary"><i class="fa-brands fa-github"></i></a></li>
-        <li>
-          <details class="dropdown">
-            <summary role="button" class="secondary">Theme</summary>
-            <ul>
-              <li><a href="#" data-theme-switcher="auto">Auto</a></li>
-              <li><a href="#" data-theme-switcher="light">Light</a></li>
-              <li><a href="#" data-theme-switcher="dark">Dark</a></li>
-            </ul>
-          </details>
-        </li>
-      </ul>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">🐋 EV Charging Planner</a>
+            <a href="https://github.com/PanuvitPNV/django-evChargingPlanner" target="_blank" class="secondary"><i class="fa-brands fa-github"></i></a>
+        </div>
     </nav>
-    <hr/>
-  </div>
 
-  <div class="container">
-    <form id="user-input" method="POST" onsubmit="return false">
-      {% csrf_token %}
-      <div class="grid">
-        <div>
-          <label for="car-brand" id="car-brand-label">Select your car brand:</label>
-          <select name="car-brand" id="car-brand" aria-label="Select your car brand..." required>
-            <option selected disabled value="">Select your car brand...</option>
-          </select>
-  
-          <label for="car-model" id="car-model-label">Select your car model:</label>
-          <select name="car-model" id="car-model" aria-label="Select your car model..." required disabled>
-            <option selected disabled value="">Select your car model...</option>
-          </select>
-  
-          <fieldset>
-            <legend>Charging port:</legend>
-            <label>
-              <input id="charging-checkbox" type="checkbox" name="Type1" disabled />
-              Type1
-            </label>
-            <label>
-              <input id="charging-checkbox" type="checkbox" name="Type2" disabled />
-              Type2
-            </label>
-            <label>
-              <input id="charging-checkbox" type="checkbox" name="CCS2" disabled />
-              CCS2
-            </label>
-            <label>
-              <input id="charging-checkbox" type="checkbox" name="CHAdeMO" disabled />
-              CHAdeMO
-            </label>
-            <label>
-              <input id="charging-checkbox" type="checkbox" name="Superchargers" disabled />
-              Superchargers
-            </label>
-          </fieldset>
-        </div>
-  
-        <div>
-          <label for="battery-capacity">Battery capacity (kWh):</label>
-          <input id="battery-capacity" placeholder="Enter the battery capacity" pattern="\d+(\.\d+)?" required disabled />
-          <small style="color: #FFA23A;" >* E.g., 100, 50.5, 123.456 or 220.0</small>
-          
-          <label for="initial-battery">Initial battery (%):</label>
-          <fieldset role="group">      
-            <input id="initInputId" type="range" min="1" max="100" oninput="initOutputId.value = initInputId.value" required />
-            <output id="initOutputId">50</output>
-          </fieldset>
-          
-          <label for="arrival-battery">Arrival battery (%):</label>
-          <fieldset role="group">      
-            <input id="arrivalInputId" type="range" min="1" max="100" oninput="arrivalOutputId.value = arrivalInputId.value" required />
-            <output id="arrivalOutputId">50</output>
-          </fieldset>
-  
-          <label>
-            <input id="manual-input" type="checkbox" role="switch" />
-              Enable manual customization
-          </label>
-        </div>
-      </div>
-  
-      <hr/>
+    <div class="container mt-4">
+        <form id="user-input" method="POST" onsubmit="return false">
+            {% csrf_token %}
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="car-brand" id="car-brand-label" class="form-label">Select your car brand:</label>
+                        <select name="car-brand" id="car-brand" class="form-select" aria-label="Select your car brand..." required>
+                            <option selected disabled value="">Select your car brand...</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="car-model" id="car-model-label" class="form-label">Select your car model:</label>
+                        <select name="car-model" id="car-model" class="form-select" aria-label="Select your car model..." required disabled>
+                            <option selected disabled value="">Select your car model...</option>
+                        </select>
+                    </div>
+
+                    <fieldset class="mb-3">
+                        <label class="mb-1">Charging port:</label>
+                        <div class="form-check">
+                            <input id="charging-checkbox" class="form-check-input" type="checkbox" name="Type1" disabled />
+                            <label class="form-check-label" for="charging-checkbox">Type1</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="charging-checkbox" class="form-check-input" type="checkbox" name="Type2" disabled />
+                            <label class="form-check-label" for="charging-checkbox">Type2</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="charging-checkbox" class="form-check-input" type="checkbox" name="CCS2" disabled />
+                            <label class="form-check-label" for="charging-checkbox">CCS2</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="charging-checkbox" class="form-check-input" type="checkbox" name="CHAdeMO" disabled />
+                            <label class="form-check-label" for="charging-checkbox">CHAdeMO</label>
+                        </div>
+                        <div class="form-check">
+                            <input id="charging-checkbox" class="form-check-input" type="checkbox" name="Superchargers" disabled />
+                            <label class="form-check-label" for="charging-checkbox">Superchargers</label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="battery-capacity" class="form-label">Battery capacity (kWh):</label>
+                        <input id="battery-capacity" class="form-control" placeholder="Enter the battery capacity" pattern="\d+(\.\d+)?" required disabled />
+                        <small class="form-text" style="color: #FFA23A;">E.g., 100, 50.5, 123.456 or 220.0</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="initial-battery" class="form-label">Initial battery (%):</label>
+                        <div class="d-flex align-items-center">
+                            <input id="initInputId" class="form-range" type="range" min="1" max="100" oninput="initOutputId.value = initInputId.value" required />
+                            <output id="initOutputId" class="ms-2">50</output>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="arrival-battery" class="form-label">Arrival battery (%):</label>
+                        <div class="d-flex align-items-center">
+                            <input id="arrivalInputId" class="form-range" type="range" min="1" max="100" oninput="arrivalOutputId.value = arrivalInputId.value" required />
+                            <output id="arrivalOutputId" class="ms-2">50</output>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input id="manual-input" class="form-check-input" type="checkbox" role="switch" />
+                        <label class="form-check-label" for="manual-input">Enable manual customization</label>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <fieldset class="mb-3">
+                <div class="mb-3">
+                    <label for="search-origin" class="form-label">Origin Location</label>
+                    <input type="text" id="search-origin" class="form-control" placeholder="Enter an origin location" required>
+                    <small class="form-text" style="color: #FFA23A;">* Please select a location from the dropdown list</small>
+                </div>
+
+                <div class="mb-3">
+                    <label for="search-destination" class="form-label">Destination Location</label>
+                    <input type="text" id="search-destination" class="form-control" placeholder="Enter a destination location" required>
+                    <small class="form-text" style="color: #FFA23A;">* Please select a location from the dropdown list</small>
+                </div>
+            </fieldset>
+
+            <div class="d-grid gap-2">
+                <input id="search-direction" type="submit" class="btn btn-primary" value="Search Direction" />
+            </div>
+            
+        </form>
+
+        <div id="map" class="mt-4"></div>
+    </div>
+
+    <dialog id="info-modal" class="modal-dialog">
+        <article>
+            <header class="modal-header">
+                <button aria-label="Close" rel="prev" data-target="info-modal" onclick="toggleModal(event)" class="btn-close"></button>
+                <h3 class="modal-title">💡 Direction Information</h3>
+            </header>
+            <details id="charging-stops" open>
+                <summary style="font-weight: 600">Charging Stops:</summary>
+                <ol></ol>
+            </details>
+            <hr />
+            <details id="summary" open>
+                <summary style="font-weight: 600">Summary:</summary>
+            </details>
+            <footer class="modal-footer">
+                <a id="gmap-links" role="button" target="_blank" href="https://www.google.com/maps" class="btn btn-primary">Open in Google Maps</a>
+                <button role="button" class="btn btn-secondary" data-target="info-modal" onclick="toggleModal(event)">Close</button>
+            </footer>
+        </article>
+    </dialog>
+
+    <dialog id="error-modal" class="modal-dialog">
+        <article>
+            <header class="modal-header">
+                <button aria-label="Close" rel="prev" data-target="error-modal" onclick="toggleModal(event)" class="btn-close"></button>
+                <h3 class="modal-title">⚠️ Error</h3>
+            </header>
+            <p id="error-message"></p>
+            <small style="color: #EE402E;"></small>
+            <footer class="modal-footer">
+                <button role="button" class="btn btn-secondary" data-target="error-modal" onclick="toggleModal(event)">Close</button>
+            </footer>
+        </article>
+    </dialog>
+
+    <dialog id="route-calculation-modal" class="modal-dialog" open>
+        <article>
+            <header>
+                <h3 aria-busy="true">Calculating Route</h3>
+            </header>
+            <p>We are currently optimizing your route for the journey. 🚀</p>
+            <p>This process may require a few moments to complete. ⏳</p>
+            <p>Your patience is appreciated. 🙏</p>
+        </article>
+    </dialog>
+
+    <dialog id="fetch-data-modal" class="modal-dialog" open>
+        <h3 aria-busy="true">Please Wait ...</h3>
+    </dialog>
+
     
-      <fieldset>
-        <label for="search-origin">Origin Location</label>
-        <input type="text" id="search-origin" placeholder="Enter an origin location" required>
-        <small style="color: #FFA23A;">* Please select a location from the dropdown list</small>
 
-        <label for="search-destination">Destination Location</label>
-        <input type="text" id="search-destination" placeholder="Enter a destination location" required>
-        <small style="color: #FFA23A;">* Please select a location from the dropdown list</small>
-      </fieldset>
-  
-      <input id="search-direction" type="submit" value="Search Direction"/>
-    </form>
-
-    <div id="map"></div>
-  </div>
-
-  <dialog id="info-modal">
-    <article>
-      <header>
-        <button aria-label="Close" rel="prev" data-target="info-modal" onclick="toggleModal(event)"></button>
-        <h3>💡 Direction Information</h3>
-      </header>
-      <details id="charging-stops" open>
-        <summary style="font-weight: 600">Charging Stops:</summary>
-        <ol></ol>
-      </details>
-      <hr/>
-      <details id="summary" open >
-        <summary style="font-weight: 600">Summary:</summary>
-      </details>
-      <footer>
-        <a id="gmap-links" role="button" target="_blank" href="https://www.google.com/maps">Open in Google Maps</a>
-        <button role="button" class="secondary" data-target="info-modal" onclick="toggleModal(event)">Close</button>
-      </footer>
-    </article>
-  </dialog>
-
-  <dialog id="error-modal">
-    <article>
-        <header>
-            <button aria-label="Close" rel="prev" data-target="error-modal" onclick="toggleModal(event)"></button>
-            <h3>⚠️ Error</h3>
-        </header>
-        <p id="error-message"></p>
-        <small style="color: #EE402E;"></small>
-        <footer>
-          <button role="button" class="secondary" data-target="error-modal" onclick="toggleModal(event)">Close</button>
-        </footer>
-    </article>
-  </dialog>
-  
-  <dialog id="route-calculation-modal">
-    <article>
-        <header>
-            <h3 aria-busy="true">Calculating Route</h3>
-        </header>
-        <p>We are currently optimizing your route for the journey. 🚀</p>
-        <p>This process may require a few moments to complete. ⏳</p>
-        <p>Your patience is appreciated. 🙏</p>
-    </article>
-  </dialog>
-
-  <dialog id="fetch-data-modal" open>
-    <h3 aria-busy="true">Please Wait ...</h3>
-  </dialog>
-
-  <script > 
-    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
-      key: "{{ google_maps_api_key }}",
-      v: "weekly",
-      // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
-      // Add other bootstrap parameters as needed, using camel case.
-    });
-  </script>
-  
-  <script src="{% static 'js/minimal-theme-switcher.js' %}"></script>
-  <script src="{% static 'js/info_modal.js' %}"></script>
+    <script>
+        (g => {
+            var h, a, k, p = "The Google Maps JavaScript API",
+                c = "google",
+                l = "importLibrary",
+                q = "__ib__",
+                m = document,
+                b = window;
+            b = b[c] || (b[c] = {});
+            var d = b.maps || (b.maps = {}),
+                r = new Set,
+                e = new URLSearchParams,
+                u = () => h || (h = new Promise(async (f, n) => {
+                    await (a = m.createElement("script"));
+                    e.set("libraries", [...r] + "");
+                    for (k in g) e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+                    e.set("callback", c + ".maps." + q);
+                    a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                    d[q] = f;
+                    a.onerror = () => h = n(Error(p + " could not load."));
+                    a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                    m.head.append(a)
+                }));
+            d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n))
+        })({
+            key: "{{ google_maps_api_key }}",
+            v: "weekly",
+            // Use the 'v' parameter to indicate the version to use (weekly, beta, alpha, etc.).
+            // Add other bootstrap parameters as needed, using camel case.
+        });
+    </script>
 </body>
 
 </html>
